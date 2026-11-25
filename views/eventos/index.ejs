@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eventos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <p><a href="/dashboard">← Voltar ao Painel</a></p>
+  <h2>Eventos</h2>
+  <% if (usuarioLogado.perfil !== 'Participante') { %>
+    <form action="/eventos" method="POST">
+      <div class="grid">
+        <input type="text" name="titulo" placeholder="Título do Evento" required>
+        <input type="date" name="data" required>
+        <select name="categoriaId" required>
+          <% categorias.forEach(c => { %><option value="<%= c.id %>"><%= c.nome %></option><% }) %>
+        </select>
+      </div>
+      <input type="text" name="descricao" placeholder="Descrição">
+      <button type="submit">Criar Evento</button>
+    </form>
+  <% } %>
+  <table>
+    <thead><tr><th>Título</th><th>Data</th><th>Categoria</th><th>Organizador</th><th>Ações</th></tr></thead>
+    <tbody>
+      <% eventos.forEach(ev => { %>
+        <tr>
+          <% if (usuarioLogado.perfil !== 'Participante') { %>
+            <form action="/eventos/<%= ev.id %>?_method=PUT" method="POST">
+              <td><input type="text" name="titulo" value="<%= ev.titulo %>"></td>
+              <td><input type="date" name="data" value="<%= ev.data %>"></td>
+              <td>
+                <select name="categoriaId">
+                  <% categorias.forEach(c => { %>
+                    <option value="<%= c.id %>" <%= ev.categoriaId === c.id ? 'selected' : '' %>><%= c.nome %></option>
+                  <% }) %>
+                </select>
+              </td>
+              <td><%= ev.organizador ? ev.organizador.nome : '-' %></td>
+              <td><button type="submit">Salvar</button></td>
+            </form>
+            <td>
+              <form action="/eventos/<%= ev.id %>?_method=DELETE" method="POST">
+                <button type="submit" class="secondary">Excluir</button>
+              </form>
+            </td>
+          <% } else { %>
+            <td><%= ev.titulo %></td>
+            <td><%= ev.data %></td>
+            <td><%= ev.Categorium ? ev.Categorium.nome : '-' %></td>
+            <td><%= ev.organizador ? ev.organizador.nome : '-' %></td>
+            <td>Somente leitura</td>
+          <% } %>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

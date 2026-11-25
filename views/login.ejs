@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Sistema de Eventos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <main style="max-width: 450px; margin: 4rem auto;">
+    <h2>Acesso ao Sistema</h2>
+    <% if (erro) { %><p style="color: red;"><%= erro %></p><% } %>
+    <form action="/login" method="POST">
+      <label>E-mail <input type="email" name="email" required value="admin@teste.com"></label>
+      <label>Senha <input type="password" name="senha" required value="123"></label>
+      <button type="submit">Entrar</button>
+    </form>
+    <small>
+      <strong>Contas de Teste (senha: 123):</strong><br>
+      Admin: admin@teste.com<br>
+      Organizador: org@teste.com<br>
+      Participante: user@teste.com
+    </small>
+  </main>
+</body>
+</html>

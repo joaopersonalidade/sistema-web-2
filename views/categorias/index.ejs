@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Categorias</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <p><a href="/dashboard">← Voltar ao Painel</a></p>
+  <h2>Gerenciar Categorias</h2>
+  <form action="/categorias" method="POST" role="group">
+    <input type="text" name="nome" placeholder="Nome da nova categoria" required>
+    <button type="submit">Criar</button>
+  </form>
+  <table>
+    <thead><tr><th>ID</th><th>Nome</th><th>Ações</th></tr></thead>
+    <tbody>
+      <% categorias.forEach(cat => { %>
+        <tr>
+          <td><%= cat.id %></td>
+          <td>
+            <form action="/categorias/<%= cat.id %>?_method=PUT" method="POST" role="group">
+              <input type="text" name="nome" value="<%= cat.nome %>" required>
+              <button type="submit">Salvar</button>
+            </form>
+          </td>
+          <td>
+            <form action="/categorias/<%= cat.id %>?_method=DELETE" method="POST">
+              <button type="submit" class="secondary">Excluir</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

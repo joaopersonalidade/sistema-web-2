@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Usuários e Perfis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <p><a href="/dashboard">← Voltar ao Painel</a></p>
+  <h2>Gerenciar Perfis de Acesso</h2>
+  <form action="/perfis" method="POST" role="group">
+    <input type="text" name="nome" placeholder="Novo Perfil" required>
+    <button type="submit">Adicionar Perfil</button>
+  </form>
+  <table>
+    <thead><tr><th>ID</th><th>Perfil</th><th>Ações</th></tr></thead>
+    <tbody>
+      <% perfis.forEach(p => { %>
+        <tr>
+          <td><%= p.id %></td>
+          <td>
+            <form action="/perfis/<%= p.id %>?_method=PUT" method="POST" role="group">
+              <input type="text" name="nome" value="<%= p.nome %>" required>
+              <button type="submit">Atualizar</button>
+            </form>
+          </td>
+          <td>
+            <form action="/perfis/<%= p.id %>?_method=DELETE" method="POST">
+              <button type="submit" class="secondary">Excluir</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <hr>
+  <h2>Gerenciar Usuários</h2>
+  <form action="/usuarios" method="POST">
+    <div class="grid">
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="email" name="email" placeholder="E-mail" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+      <select name="perfilId" required>
+        <% perfis.forEach(p => { %><option value="<%= p.id %>"><%= p.nome %></option><% }) %>
+      </select>
+    </div>
+    <button type="submit">Cadastrar Usuário</button>
+  </form>
+  <table>
+    <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Ações</th></tr></thead>
+    <tbody>
+      <% usuarios.forEach(u => { %>
+        <tr>
+          <form action="/usuarios/<%= u.id %>?_method=PUT" method="POST">
+            <td><input type="text" name="nome" value="<%= u.nome %>"></td>
+            <td><input type="email" name="email" value="<%= u.email %>"></td>
+            <td>
+              <select name="perfilId">
+                <% perfis.forEach(p => { %>
+                  <option value="<%= p.id %>" <%= u.perfilId === p.id ? 'selected' : '' %>><%= p.nome %></option>
+                <% }) %>
+              </select>
+            </td>
+            <td><button type="submit">Salvar</button></td>
+          </form>
+          <td>
+            <form action="/usuarios/<%= u.id %>?_method=DELETE" method="POST">
+              <button type="submit" class="secondary">Excluir</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

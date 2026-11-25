@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inscrições (N:N)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <p><a href="/dashboard">← Voltar ao Painel</a></p>
+  <h2>Inscrições em Eventos (Relacionamento N:N)</h2>
+  <form action="/inscricoes" method="POST" class="grid">
+    <select name="eventoId" required>
+      <% eventos.forEach(ev => { %><option value="<%= ev.id %>"><%= ev.titulo %></option><% }) %>
+    </select>
+    <% if (usuarioLogado.perfil === 'Admin') { %>
+      <select name="usuarioId" required>
+        <% usuarios.forEach(u => { %><option value="<%= u.id %>"><%= u.nome %></option><% }) %>
+      </select>
+    <% } %>
+    <button type="submit">Inscrever</button>
+  </form>
+  <table>
+    <thead><tr><th>ID</th><th>Participante</th><th>Evento</th><th>Status</th><th>Ações</th></tr></thead>
+    <tbody>
+      <% inscricoes.forEach(ins => { %>
+        <tr>
+          <td><%= ins.id %></td>
+          <td><%= ins.Usuario ? ins.Usuario.nome : '-' %></td>
+          <td><%= ins.Evento ? ins.Evento.titulo : '-' %></td>
+          <td>
+            <form action="/inscricoes/<%= ins.id %>?_method=PUT" method="POST" role="group">
+              <select name="status">
+                <option value="Confirmada" <%= ins.status === 'Confirmada' ? 'selected' : '' %>>Confirmada</option>
+                <option value="Cancelada" <%= ins.status === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+              <button type="submit">Atualizar</button>
+            </form>
+          </td>
+          <td>
+            <form action="/inscricoes/<%= ins.id %>?_method=DELETE" method="POST">
+              <button type="submit" class="secondary">Cancelar/Excluir</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

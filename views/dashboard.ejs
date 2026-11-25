@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Painel</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body class="container">
+  <nav>
+    <ul><li><strong>Sistema de Eventos (MVC)</strong></li></ul>
+    <ul>
+      <li><%= usuario.nome %> (<%= usuario.perfil %>)</li>
+      <li><a href="/logout">Sair</a></li>
+    </ul>
+  </nav>
+  <h3>Menu de Navegação</h3>
+  <ul>
+    <li><a href="/eventos">Eventos (Todos os perfis)</a></li>
+    <li><a href="/inscricoes">Inscrições N:N (Todos os perfis)</a></li>
+    <li><a href="/categorias">Categorias (Somente Admin)</a></li>
+    <li><a href="/usuarios">Usuários e Perfis (Somente Admin)</a></li>
+    <li><a href="/api-docs" target="_blank">Documentação API REST (Swagger)</a></li>
+  </ul>
+</body>
+</html>
