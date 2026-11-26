@@ -70,7 +70,7 @@ async function inicializarBanco() {
   });
 
   await Usuario.findOrCreate({
-    where: { email: 'user@teste.com' },
+    where: { email: 'participante@teste.com' },
     defaults: { nome: 'Maria Participante', senha: '123', perfilId: partPerfil.id }
   });
 

@@ -30,7 +30,7 @@ module.exports = {
       perfil: usuario.Perfil.nome
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
     return res.status(200).json({ mensagem: 'Autenticado com sucesso', token, usuario: payload });
   },
 
@@ -106,18 +106,27 @@ module.exports = {
     res.status(200).json(dados);
   },
   async criarEvento(req, res) {
-
-  	const eventoDuplicado = await Evento.findOne({ where: { titulo, data } });
-  	if (eventoDuplicado) {
-  	  return res.status(400).json({ erro: 'Já existe um evento com este título nesta data.' });
-  	}
-  	
-    const novo = await Evento.create({
-      ...req.body,
-      organizadorId: req.body.organizadorId || req.usuarioApi.id
-    });
-    res.status(201).json(novo);
-  },
+      try {
+        const { titulo, data } = req.body;
+  
+        if (!titulo || !data) {
+          return res.status(400).json({ erro: 'Título e data são obrigatórios.' });
+        }
+  
+        const eventoDuplicado = await Evento.findOne({ where: { titulo, data } });
+        if (eventoDuplicado) {
+          return res.status(400).json({ erro: 'Já existe um evento com este título nesta data.' });
+        }
+  
+        const novo = await Evento.create({
+          ...req.body,
+          organizadorId: req.body.organizadorId || req.usuarioApi.id
+        });
+        return res.status(201).json(novo);
+      } catch (e) {
+        return res.status(400).json({ erro: e.message });
+      }
+    },
   async atualizarEvento(req, res) {
     const registro = await Evento.findByPk(req.params.id);
     if (!registro) return res.status(404).json({ erro: 'Evento não encontrado' });

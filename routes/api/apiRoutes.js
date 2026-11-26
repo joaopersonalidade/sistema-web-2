@@ -15,7 +15,7 @@ router.post('/usuarios', verificarToken, permitirPerfisApi('Admin'), api.criarUs
 router.put('/usuarios/:id', verificarToken, permitirPerfisApi('Admin'), api.atualizarUsuario);
 router.delete('/usuarios/:id', verificarToken, permitirPerfisApi('Admin'), api.deletarUsuario);
 
-router.get('/categorias', verificarToken, api.listarCategorias);
+router.get('/categorias', verificarToken, permitirPerfisApi(['Admin', 'Organizador']), api.listarCategorias);
 router.post('/categorias', verificarToken, permitirPerfisApi('Admin'), api.criarCategoria);
 router.put('/categorias/:id', verificarToken, permitirPerfisApi('Admin'), api.atualizarCategoria);
 router.delete('/categorias/:id', verificarToken, permitirPerfisApi('Admin'), api.deletarCategoria);
