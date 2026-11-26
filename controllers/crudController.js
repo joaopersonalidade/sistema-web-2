@@ -51,6 +51,7 @@ module.exports = {
     res.redirect('/usuarios');
   },
   async deletarUsuario(req, res) {
+  	if (req.params.id == req.session.usuario.id) return res.redirect('/usuarios');
     await Usuario.destroy({ where: { id: req.params.id } });
     res.redirect('/usuarios');
   },

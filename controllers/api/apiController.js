@@ -72,6 +72,10 @@ module.exports = {
     res.status(200).json({ mensagem: 'Usuário atualizado', dado: registro });
   },
   async deletarUsuario(req, res) {
+  	if (req.params.id == req.usuarioApi.id)
+  	{
+  		return res.status(400).json({ erro: 'Você não pode excluir seu próprio usuário.'});
+  	}
     const registro = await Usuario.findByPk(req.params.id);
     if (!registro) return res.status(404).json({ erro: 'Usuário não encontrado' });
     await registro.destroy();
@@ -141,43 +145,48 @@ module.exports = {
   },
 
   // === INSCRIÇÕES ===
-  async listarInscricoes(req, res) {
-    const dados = await Inscricao.findAll({
-      include: [{ model: Usuario, attributes: ['id', 'nome', 'email'] }, Evento]
-    });
-    res.status(200).json(dados);
-  },
-  async criarInscricao(req, res) {
-
-	const usuarioId = req.body.usuarioId || req.usuarioApi.id;
-  	const { eventoId, status } = req.body;
-  	
-  	const jaInscrito = await Inscricao.findOne({ where: { usuarioId, eventoId } });
-  	if (jaInscrito) {
-  	  return res.status(400).json({ erro: 'Usuário já está inscrito neste evento.' });
-  	}
-  	
-    const novo = await Inscricao.create({
-      usuarioId: req.body.usuarioId || req.usuarioApi.id,
-      eventoId: req.body.eventoId,
-      status: req.body.status || 'Confirmada'
-    });
-    res.status(201).json(novo);
-  },
-  async atualizarInscricao(req, res) {
-
-  	const { inscricao, erro, msg } = await validarDonoInscricaoApi(req);
-  	if (erro) return res.status(erro).json({ erro: msg });
-  	
-    const registro = await Inscricao.findByPk(req.params.id);
-    if (!registro) return res.status(404).json({ erro: 'Inscrição não encontrada' });
-    await registro.update({ status: req.body.status });
-    res.status(200).json({ mensagem: 'Inscrição atualizada', dado: registro });
-  },
-  async deletarInscricao(req, res) {
-    const registro = await Inscricao.findByPk(req.params.id);
-    if (!registro) return res.status(404).json({ erro: 'Inscrição não encontrada' });
-    await registro.destroy();
-    res.status(200).json({ mensagem: 'Inscrição excluída' });
-  }
-};
+    async listarInscricoes(req, res) {
+      const dados = await Inscricao.findAll({
+        include: [{ model: Usuario, attributes: ['id', 'nome', 'email'] }, Evento]
+      });
+      return res.status(200).json(dados);
+    },
+    async criarInscricao(req, res) {
+      try {
+        const usuarioId = req.body.usuarioId || req.usuarioApi.id;
+        const { eventoId, status } = req.body;
+  
+        if (!eventoId) {
+          return res.status(400).json({ erro: 'eventoId é obrigatório.' });
+        }
+  
+        const jaInscrito = await Inscricao.findOne({ where: { usuarioId, eventoId } });
+        if (jaInscrito) {
+          return res.status(400).json({ erro: 'Usuário já está inscrito neste evento.' });
+        }
+  
+        const novo = await Inscricao.create({
+          usuarioId,
+          eventoId,
+          status: status || 'Confirmada'
+        });
+        return res.status(201).json(novo);
+      } catch (e) {
+        return res.status(400).json({ erro: e.message });
+      }
+    },
+    async atualizarInscricao(req, res) {
+      const { inscricao, erro, msg } = await validarDonoInscricaoApi(req);
+      if (erro) return res.status(erro).json({ erro: msg });
+  
+      await inscricao.update({ status: req.body.status });
+      return res.status(200).json({ mensagem: 'Inscrição atualizada', dado: inscricao });
+    },
+    async deletarInscricao(req, res) {
+      const { inscricao, erro, msg } = await validarDonoInscricaoApi(req);
+      if (erro) return res.status(erro).json({ erro: msg });
+  
+      await inscricao.destroy();
+      return res.status(200).json({ mensagem: 'Inscrição excluída' });
+    }
+  };
