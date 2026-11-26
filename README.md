@@ -6,7 +6,7 @@ Projeto desenvolvido para a disciplina de Desenvolvimento Web, contemplando uma 
 
 * João Vítor Antunes da Luz
 
-* Nome do Integrante 2
+* Matheus Henrique dos Santos
 
 ## Tecnologias Utilizadas
 
@@ -80,11 +80,11 @@ O sistema possui **5 entidades** e **4 relacionamentos**:
 
 ## Credenciais de Acesso (Ambiente de Teste)
 
-* **Administrador:** `admin@eventos.com` / `123456` *(ajuste caso tenha usado outro e-mail/senha no seed)*
+* **Administrador:** `admin@eventos.com` / `123` *(ajuste caso tenha usado outro e-mail/senha no seed)*
 
-* **Organizador:** `organizador@eventos.com` / `123456`
+* **Organizador:** `org@eventos.com` / `123`
 
-* **Participante:** `participante@eventos.com` / `123456`
+* **Participante:** `participante@eventos.com` / `123`
 
 ## Principais Endpoints da API (`/api`)
 
